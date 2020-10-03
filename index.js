@@ -12,15 +12,6 @@ function initMap() {
         minZoom: 2
     };
     map.setOptions(opt);
-    var landcover = new google.maps.ImageMapType({
-        getTileUrl: getTileUrl,
-        name: "Landcover",
-        alt: "National Land Cover Database 2016",
-        minZoom: 0,
-        maxZoom: 19,
-        opacity: 1.0
-    });
-    map.overlayMapTypes.push(landcover);
     $(document).ready(function() {
         $.ajax({
             type: "GET",
@@ -35,31 +26,28 @@ function initMap() {
         });
     });
 }
-
-var EXTENT = [-Math.PI * 6378137, Math.PI * 6378137];
-
-function xyzToBounds(x, y, z) {
-    var tileSize = (EXTENT[1] * 2) / Math.pow(2, z);
-    var minx = EXTENT[0] + x * tileSize;
-    var maxx = EXTENT[0] + (x + 1) * tileSize;
-    // remember y origin starts at top
-    var miny = EXTENT[1] - (y + 1) * tileSize;
-    var maxy = EXTENT[1] - y * tileSize;
-    return [minx, miny, maxx, maxy];
+function merc(){
+    map.overlayMapTypes.clear();
+    var date = document.getElementById('merc_date').value
+    var getTileUrl = function (tile, zoom) {
+        return '//gibs.earthdata.nasa.gov/wmts/epsg3857/best/' +
+        'MODIS_Terra_Aerosol/default/'+date+'/'+
+        'GoogleMapsCompatible_Level6/' +
+        zoom + '/' + tile.y + '/' +
+        tile.x + '.png';
+    };
+    var layerOptions = {
+        alt: 'MODIS_Terra_Aerosol',
+        getTileUrl: getTileUrl,
+        maxZoom: 6,
+        minZoom: 1,
+        name: 'MODIS_Terra_Aerosol',
+        tileSize: new google.maps.Size(256, 256),
+        opacity: 0.5
+    };
+    var imageMapType = new google.maps.ImageMapType(layerOptions);
+    map.overlayMapTypes.insertAt(0, imageMapType);
 }
-
-var getTileUrl = function(coordinates, zoom) {
-    return (
-        "https://www.mrlc.gov/geoserver/NLCD_Land_Cover/wms?" +
-        "&REQUEST=GetMap&SERVICE=WMS&VERSION=1.1.1" +
-        "&LAYERS=mrlc_display%3ANLCD_2016_Land_Cover_L48" +
-        "&FORMAT=image%2Fpng" +
-        "&SRS=EPSG:3857&WIDTH=256&HEIGHT=256" +
-        "&BBOX=" +
-        xyzToBounds(coordinates.x, coordinates.y, zoom).join(",")
-    );
-};
-
 setMarker = function(lat, lng) {
     lat = Number(lat)
     lng = Number(lng)
@@ -84,6 +72,6 @@ setMarker = function(lat, lng) {
 processData = function(data) {
     data = data.split('\n')
     for (i = 1; i < data.length; i++) {
-        setMarker(data[i].split(',')[0], data[i].split(',')[1])
+        //setMarker(data[i].split(',')[0], data[i].split(',')[1])
     }
 }
