@@ -4,6 +4,7 @@
 <head>
     <title>Simple Map</title>
     <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDeQbYPlVEYFSbdJfsDofKG90tr7hECJDc&callback=initMap&libraries=&v=weekly" defer></script>
     <style type="text/css">
         /* Always set the map height explicitly to define the size of the div
@@ -20,19 +21,22 @@
             margin: 0;
             padding: 0;
         }
+        
         output {
             display: block;
             margin-top: 4em;
             font-family: monospace;
             font-size: .8em;
         }
-        .map-icon{
+        
+        .map-icon {
             height: 10px;
             width: 10px;
         }
     </style>
     <script>
         let map;
+
         function initMap() {
             map = new google.maps.Map(document.getElementById("map"), {
                 center: {
@@ -41,9 +45,20 @@
                 },
                 zoom: 2,
             });
-            var opt = { minZoom: 2};
+            var opt = {
+                minZoom: 2
+            };
             map.setOptions(opt);
-            readTextFile("file:////Users/abhishekpaul/Documents/NASA/a.csv");
+            $(document).ready(function() {
+                $.ajax({
+                    type: "GET",
+                    url: "a.csv",
+                    dataType: "text",
+                    success: function(data) {
+                        processData(data)
+                    }
+                });
+            });
         }
         setMarker = function(lat, lng) {
             lat = Number(lat)
@@ -56,58 +71,27 @@
             var icon = {
                 url: img, // url
                 scaledSize: new google.maps.Size(20, 20), // scaled size
-                origin: new google.maps.Point(0,0), // origin
+                origin: new google.maps.Point(0, 0), // origin
                 anchor: new google.maps.Point(0, 0) // anchor
             };
             var marker = new google.maps.Marker({
-                position: new google.maps.LatLng(lat,lng),
+                position: new google.maps.LatLng(lat, lng),
                 map: map,
-                icon:icon
+                icon: icon
             });
         }
-        window.onload = function() {
-        var fileInput = document.getElementById("csv"),
-            readFile = function() {
-                var reader = new FileReader();
-                reader.onload = function() {
-                    var data = reader.result;
-                    data = data.split('\n')
-                    for(i=1;i<data.length;i++){
-                        setMarker(data[i].split(',')[0],data[i].split(',')[1])
-                    }
-                };
-                reader.readAsBinaryString(fileInput.files[0]);
-            };
-            fileInput.addEventListener('change', readFile);
-        }
-        function readTextFile(file)
-        {
-        var rawFile = new XMLHttpRequest();
-        rawFile.open("GET", file, false);
-        rawFile.onreadystatechange = function ()
-        {
-        if(rawFile.readyState === 4)
-        {
-            if(rawFile.status === 200 || rawFile.status == 0)
-            {
-                var allText = rawFile.responseText;
-                alert(allText);
+
+        processData = function(data) {
+            data = data.split('\n')
+            for (i = 1; i < data.length; i++) {
+                setMarker(data[i].split(',')[0], data[i].split(',')[1])
             }
-        }
-        }
-        rawFile.send(null);
         }
     </script>
 </head>
 
 <body>
     <div id="map"></div>
-    <p>Select local CSV File:</p>
-    <input id="csv" type="file">
-
-    <output id="out">
-        file contents will appear here
-    </output>
 </body>
 
 </html>
