@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Simple Map</title>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDeQbYPlVEYFSbdJfsDofKG90tr7hECJDc&callback=initMap&libraries=&v=weekly" defer></script>
+    <style type="text/css">
+        /* Always set the map height explicitly to define the size of the div
+       * element that contains the map. */
+        
+        #map {
+            height: 100%;
+        }
+        /* Optional: Makes the sample page fill the window. */
+        
+        html,
+        body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
+        
+        output {
+            display: block;
+            margin-top: 4em;
+            font-family: monospace;
+            font-size: .8em;
+        }
+    </style>
+    <script>
+        let map;
+        function initMap() {
+            map = new google.maps.Map(document.getElementById("map"), {
+                center: {
+                    lat: 0,
+                    lng: 0
+                },
+                zoom: 2,
+            });
+        }
+        setMarker = function(lat, lng) {
+            lat = Number(lat)
+            lng = Number(lng)
+            const myLatLng = {
+                lat: lat,
+                lng: lng
+            };
+            var marker = new google.maps.Marker({
+                position: myLatLng,
+                map,
+            });
+            
+        }
+        window.onload = function() {
+        var fileInput = document.getElementById("csv"),
+            readFile = function() {
+                var reader = new FileReader();
+                reader.onload = function() {
+                    var data = reader.result;
+                    data = data.split('\n')
+                    for(i=1;i<data.length;i++){
+                        setMarker(data[i].split(',')[0],data[i].split(',')[1])
+                    }
+                };
+                // start reading the file. When it is done, calls the onload event defined above.
+                reader.readAsBinaryString(fileInput.files[0]);
+            };
+        fileInput.addEventListener('change', readFile);
+        }
+    </script>
+</head>
+
+<body>
+    <div id="map"></div>
+    <p>Select local CSV File:</p>
+    <input id="csv" type="file">
+
+    <output id="out">
+        file contents will appear here
+    </output>
+</body>
+
+</html>
