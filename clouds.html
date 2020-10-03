@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Clouds</title>
+    <link rel="stylesheet" href="./style.css">
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
+</head>
+<script>
+    function disp(){
+        var date = document.getElementById('date').value
+        document.getElementById('img').src = "https://gibs.earthdata.nasa.gov/wmts/epsg4326/best/MODIS_Terra_CorrectedReflectance_TrueColor/default/"+date+"/250m/6/13/36.jpg"
+    }
+</script>
+
+<body>
+    <input style="margin-top: 25px;margin-left: 10px;" type="date" id="date">
+    <button onclick="disp()" style="margin-left: 20px;">GO</button><br>
+    <img style="margin-top: 50px;margin-left: 100px;" width="800" height="600" id="img">
+</body>
+
+</html>
