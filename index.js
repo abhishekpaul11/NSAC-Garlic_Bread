@@ -15,7 +15,7 @@ function initMap() {
     $(document).ready(function() {
         $.ajax({
             type: "GET",
-            url: "ab.csv",
+            url: "a.csv",
             dataType: "text",
             success: function(data) {
                 processData(data)
@@ -26,15 +26,16 @@ function initMap() {
         });
     });
 }
-function merc(){
+
+function merc() {
     map.overlayMapTypes.clear();
     var date = document.getElementById('merc_date').value
-    var getTileUrl = function (tile, zoom) {
+    var getTileUrl = function(tile, zoom) {
         return '//gibs.earthdata.nasa.gov/wmts/epsg3857/best/' +
-        'MODIS_Terra_Aerosol/default/'+date+'/'+
-        'GoogleMapsCompatible_Level6/' +
-        zoom + '/' + tile.y + '/' +
-        tile.x + '.png';
+            'MODIS_Terra_Aerosol/default/' + date + '/' +
+            'GoogleMapsCompatible_Level6/' +
+            zoom + '/' + tile.y + '/' +
+            tile.x + '.png';
     };
     var layerOptions = {
         alt: 'MODIS_Terra_Aerosol',
@@ -48,15 +49,16 @@ function merc(){
     var imageMapType = new google.maps.ImageMapType(layerOptions);
     map.overlayMapTypes.insertAt(0, imageMapType);
 }
-function aqua(){
+
+function aqua() {
     map.overlayMapTypes.clear();
     var date = document.getElementById('aqua_date').value
-    var getTileUrl = function (tile, zoom) {
+    var getTileUrl = function(tile, zoom) {
         return '//gibs.earthdata.nasa.gov/wmts/epsg3857/best/' +
-        'MODIS_Aqua_Aerosol/default/'+date+'/'+
-        'GoogleMapsCompatible_Level6/' +
-        zoom + '/' + tile.y + '/' +
-        tile.x + '.png';
+            'MODIS_Aqua_Aerosol/default/' + date + '/' +
+            'GoogleMapsCompatible_Level6/' +
+            zoom + '/' + tile.y + '/' +
+            tile.x + '.png';
     };
     var layerOptions = {
         alt: 'MODIS_Aqua_Aerosol',
@@ -73,10 +75,6 @@ function aqua(){
 setMarker = function(lat, lng) {
     lat = Number(lat)
     lng = Number(lng)
-    const myLatLng = {
-        lat: lat,
-        lng: lng
-    };
     var img = 'b.png'
     var icon = {
         url: img, // url
@@ -87,13 +85,32 @@ setMarker = function(lat, lng) {
     var marker = new google.maps.Marker({
         position: new google.maps.LatLng(lat, lng),
         map: map,
-        icon: icon
+        icon: icon,
+        url: 'http://www.google.com/'
+    });
+    var contentString =
+        '<div id="content">' +
+        '<div id="siteNotice">' +
+        "</div>" +
+        '<h1 id="firstHeading" class="firstHeading">Uluru</h1>' +
+        '<div id="bodyContent">' +
+        "<ul><li>Hello There</li>" + "<li>Hello There2</li></ul>" +
+        '<p>Attribution: Uluru, <a href="https://en.wikipedia.org/w/index.php?title=Uluru&oldid=297882194">' +
+        "https://en.wikipedia.org/w/index.php?title=Uluru</a> " +
+        "(last visited June 22, 2009).</p>" +
+        "</div>" +
+        "</div>";
+    var infowindow = new google.maps.InfoWindow({
+        content: contentString
+    });
+    google.maps.event.addListener(marker, 'click', function() {
+        infowindow.open(map, marker);
     });
 }
 
 processData = function(data) {
     data = data.split('\n')
     for (i = 1; i < data.length; i++) {
-        //setMarker(data[i].split(',')[0], data[i].split(',')[1])
+        setMarker(data[i].split(',')[0], data[i].split(',')[1])
     }
 }
