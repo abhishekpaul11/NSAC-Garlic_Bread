@@ -3,7 +3,7 @@
 
 <head>
     <title>Clouds</title>
-    <link rel="stylesheet" href="./style.css">
+    <link rel="stylesheet" href="./cloud.css">
     <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
 </head>
 <script>
@@ -14,9 +14,17 @@
 </script>
 
 <body>
-    <input style="margin-top: 25px;margin-left: 10px;" type="date" id="date">
-    <button onclick="disp()" style="margin-left: 20px;">GO</button><br>
-    <img style="margin-top: 50px;margin-left: 100px;" width="800" height="600" id="img">
+    <div id="header">
+        <text id="name">GARLIC BREAD</text><br><br>
+        <a href="index.html" style="text-decoration: none;margin-left: 60px;margin-right: 60px;"><text id="tabs">Web Mercator Layers</text></a>
+        <a href="clouds.html" style="text-decoration: none;margin-left: 60px;margin-right: 60px;"><text id="tabs">MODIS Terra Clouds</text></a>
+    </div>
+    <div id="input">
+        <input style="margin-top: 25px;margin-left: 10px;" type="date" id="date"><br>
+        <button onclick="disp()" style="margin-left: 20px;margin-top: 15px;" id="go">GO</button>
+    </div>
+    <div id="disp">
+        <img width="600" height="500" src="https://i.pinimg.com/736x/58/61/97/58619737d024a55b2c1558b580fcb53f.jpg" id="img">
+    </div>
 </body>
-
 </html>
