@@ -1,4 +1,5 @@
 let map;
+let markers = []
 
 function initMap() {
     map = new google.maps.Map(document.getElementById("map"), {
@@ -12,19 +13,6 @@ function initMap() {
         minZoom: 2
     };
     map.setOptions(opt);
-    $(document).ready(function() {
-        $.ajax({
-            type: "GET",
-            url: "a.csv",
-            dataType: "text",
-            success: function(data) {
-                processData(data)
-            },
-            error: function(err) {
-                console.log(err)
-            }
-        });
-    });
 }
 
 function merc() {
@@ -72,7 +60,7 @@ function aqua() {
     var imageMapType = new google.maps.ImageMapType(layerOptions);
     map.overlayMapTypes.insertAt(0, imageMapType);
 }
-setMarker = function(lat, lng) {
+setMarker = function(lat, lng, data, index) {
     lat = Number(lat)
     lng = Number(lng)
     var img = 'b.png'
@@ -88,18 +76,17 @@ setMarker = function(lat, lng) {
         icon: icon,
         url: 'http://www.google.com/'
     });
+    markers.push(marker)
     var contentString =
         '<div id="content">' +
         '<div id="siteNotice">' +
         "</div>" +
-        '<h1 id="firstHeading" class="firstHeading">Uluru</h1>' +
         '<div id="bodyContent">' +
-        "<ul><li>Hello There</li>" + "<li>Hello There2</li></ul>" +
-        '<p>Attribution: Uluru, <a href="https://en.wikipedia.org/w/index.php?title=Uluru&oldid=297882194">' +
-        "https://en.wikipedia.org/w/index.php?title=Uluru</a> " +
-        "(last visited June 22, 2009).</p>" +
-        "</div>" +
-        "</div>";
+        "<ul>";
+    for (j = 2; j < 13; j++) {
+        contentString += "<li>" + data[0].split(',')[j] + ": " + data[index].split(',')[j] + "</li>"
+    }
+    contentString += "</ul>" + "</div>" + "</div>";
     var infowindow = new google.maps.InfoWindow({
         content: contentString
     });
@@ -108,9 +95,26 @@ setMarker = function(lat, lng) {
     });
 }
 
-processData = function(data) {
-    data = data.split('\n')
-    for (i = 1; i < data.length; i++) {
-        setMarker(data[i].split(',')[0], data[i].split(',')[1])
+function fire() {
+    $.ajax({
+        type: "GET",
+        url: "data.csv",
+        dataType: "text",
+        success: function(data) {
+            data = data.split('\n')
+            for (i = 1; i < data.length; i++) {
+                setMarker(data[i].split(',')[0], data[i].split(',')[1], data, i)
+            }
+        },
+        error: function(err) {
+            console.log(err)
+        }
+    });
+}
+
+const clr = function() {
+    for (let i = 0; i < markers.length; i++) {
+        markers[i].setMap(null);
     }
+    markers = []
 }
