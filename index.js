@@ -48,6 +48,28 @@ function merc(){
     var imageMapType = new google.maps.ImageMapType(layerOptions);
     map.overlayMapTypes.insertAt(0, imageMapType);
 }
+function aqua(){
+    map.overlayMapTypes.clear();
+    var date = document.getElementById('aqua_date').value
+    var getTileUrl = function (tile, zoom) {
+        return '//gibs.earthdata.nasa.gov/wmts/epsg3857/best/' +
+        'MODIS_Aqua_Aerosol/default/'+date+'/'+
+        'GoogleMapsCompatible_Level6/' +
+        zoom + '/' + tile.y + '/' +
+        tile.x + '.png';
+    };
+    var layerOptions = {
+        alt: 'MODIS_Aqua_Aerosol',
+        getTileUrl: getTileUrl,
+        maxZoom: 6,
+        minZoom: 1,
+        name: 'MODIS_Aqua_Aerosol',
+        tileSize: new google.maps.Size(256, 256),
+        opacity: 0.5
+    };
+    var imageMapType = new google.maps.ImageMapType(layerOptions);
+    map.overlayMapTypes.insertAt(0, imageMapType);
+}
 setMarker = function(lat, lng) {
     lat = Number(lat)
     lng = Number(lng)
