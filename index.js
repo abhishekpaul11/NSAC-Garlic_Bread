@@ -63,7 +63,7 @@ function aqua() {
 setMarker = function(lat, lng, data, index) {
     lat = Number(lat)
     lng = Number(lng)
-    var img = 'b.png'
+    var img = 'marker.png'
     var icon = {
         url: img, // url
         scaledSize: new google.maps.Size(20, 20), // scaled size
